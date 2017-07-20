@@ -191,30 +191,21 @@ class ThrowerAnt(Ant):
     damage = 1
     food_cost = 3
 
-    def nearest_bee(self, hive):
+    def nearest_bee(self, hive, index = 0):
         """Return the nearest Bee in a Place that is not the HIVE, connected to
         the ThrowerAnt's Place by following entrances.
 
         This method returns None if there is no such Bee (or none in range).
         """
         # BEGIN Problem 5
-        # bee1 = None
-        # index = 0
-        # while self.place != hive and not bee1:
-        # 	bee1 = random_or_none(self.place.bees)
-        # 	self.place = self.place.entrance
-        # 	index += 1
-        # while index >= 0:
-        # 	self.place = self.place.exit
-        # 	index -= 1
-        # return bee1
-        if self.place.bees:
+        if self.place.bees and self.min_range <= index:
         	return random_or_none(self.place.bees)
-        elif self.place.entrance == hive:
+        elif self.place.entrance == hive or (index >= self.max_range) and self.max_range != 0:
         	return None
         else:
+        	index += 1
         	self.place = self.place.entrance
-        	x = self.nearest_bee(hive)
+        	x = self.nearest_bee(hive,index)
         	self.place = self.place.exit
         	return x
         # END Problem 5
@@ -280,9 +271,13 @@ class LongThrower(ThrowerAnt):
     """A ThrowerAnt that only throws leaves at Bees at least 5 places away."""
 
     name = 'Long'
+    min_range = 5
+    max_range = 0
+    food_cost = 2
+    damage = 1
     # BEGIN Problem 6
     "*** REPLACE THIS LINE ***"
-    implemented = False   # Change to True to view in the GUI
+    implemented = True   # Change to True to view in the GUI
     # END Problem 6
 
 
@@ -290,9 +285,13 @@ class ShortThrower(ThrowerAnt):
     """A ThrowerAnt that only throws leaves at Bees at most 3 places away."""
 
     name = 'Short'
+    min_range = 0
+    max_range = 3
+    food_cost = 2
+    damage = 1
     # BEGIN Problem 6
     "*** REPLACE THIS LINE ***"
-    implemented = False   # Change to True to view in the GUI
+    implemented = True   # Change to True to view in the GUI
     # END Problem 6
 
 
