@@ -128,6 +128,7 @@ class Bee(Insect):
     name = 'Bee'
     damage = 1
     watersafe = True
+    stun_num = 0
 
     def sting(self, ant):
         """Attack an ANT, reducing its armor by 1."""
@@ -498,6 +499,7 @@ class AntRemover(Ant):
 ##################
 # Status Effects #
 ##################
+import types
 
 def make_slow(action):
     """Return a new action method that calls ACTION every other turn.
@@ -505,7 +507,13 @@ def make_slow(action):
     action -- An action method of some Bee
     """
     # BEGIN Problem EC
-    "*** REPLACE THIS LINE ***"
+    def new_action(self, colony):
+        if colony.time%2 == 0:
+            Bee.action(self,colony)
+        self.action = action
+        self.stun_num = 0
+    return new_action
+
     # END Problem EC
 
 def make_stun(action):
@@ -514,13 +522,24 @@ def make_stun(action):
     action -- An action method of some Bee
     """
     # BEGIN Problem EC
-    "*** REPLACE THIS LINE ***"
+    def new_action(self, colony):
+        if False:
+            Bee.action(self,colony)
+        self.action = action
+        self.stun_num = 0
+    return new_action
     # END Problem EC
 
 def apply_effect(effect, bee, duration):
     """Apply a status effect to a BEE that lasts for DURATION turns."""
     # BEGIN Problem EC
-    "*** REPLACE THIS LINE ***"
+    x = duration
+    if duration == 3:
+        x = duration - bee.stun_num
+    for i in range(x):
+        bee.action = types.MethodType(effect(bee.action),bee)
+    bee.stun_num += 1
+
     # END Problem EC
 
 
@@ -529,8 +548,8 @@ class SlowThrower(ThrowerAnt):
 
     name = 'Slow'
     # BEGIN Problem EC
-    "*** REPLACE THIS LINE ***"
-    implemented = False   # Change to True to view in the GUI
+    food_cost = 4
+    implemented = True   # Change to True to view in the GUI
     # END Problem EC
 
     def throw_at(self, target):
@@ -543,8 +562,8 @@ class StunThrower(ThrowerAnt):
 
     name = 'Stun'
     # BEGIN Problem EC
-    "*** REPLACE THIS LINE ***"
-    implemented = False   # Change to True to view in the GUI
+    food_cost = 6
+    implemented = True   # Change to True to view in the GUI
     # END Problem EC
 
     def throw_at(self, target):
